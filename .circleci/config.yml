@@ -87,7 +87,7 @@ jobs:
           command: >
             export IMPORT_MAP_DATA='{
             "service": "@angular-microfrontends/'"$CIRCLE_PROJECT_REPONAME"'",
-            "url": "https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/main.js"
+            "url": "https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/angular-microfrontends-'"$CIRCLE_PROJECT_REPONAME"'.umd.js"
             }'
 
             echo "Import map data: $IMPORT_MAP_DATA"
