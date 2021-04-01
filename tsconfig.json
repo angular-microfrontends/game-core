@@ -5,7 +5,7 @@
     "baseUrl": "./",
     "paths": {
       "game-core": [
-        "dist/angular-mf-game-core"
+        "dist/angular-microfrontends-game-core"
       ]
     },
     "outDir": "./dist/out-tsc",

@@ -1,5 +1,5 @@
 {
-  "name": "@angular-mf/game-core",
+  "name": "@angular-microfrontends/game-core",
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {

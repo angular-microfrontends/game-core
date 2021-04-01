@@ -26,13 +26,13 @@ jobs:
           command: pnpm run build -- --prod
       - run:
           name: List
-          command: ls dist/angular-mf-game-core
+          command: ls dist/angular-microfrontends-game-core
       - save_cache:
           key: build-output-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - dist/angular-mf-game-core
+            - dist/angular-microfrontends-game-core
       - store_artifacts:
-          path: dist/angular-mf-game-core
+          path: dist/angular-microfrontends-game-core
           destination: dist/
   quality:
     docker:
@@ -55,11 +55,11 @@ jobs:
           key: build-output-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Registry authentication
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/angular-mf-game-core/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/angular-microfrontends-game-core/.npmrc
       - run:
           name: Publish
           command: pnpm publish --access=public
-          working_directory: dist/angular-mf-game-core
+          working_directory: dist/angular-microfrontends-game-core
 workflows:
   version: 2
   build_and_deploy:
