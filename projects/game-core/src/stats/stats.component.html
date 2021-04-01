@@ -1,0 +1,36 @@
+<div class="name">{{ fighter.name }}</div>
+
+<div class="health">
+  <label>Health</label>
+  <div [style.background]="healthBar">
+    {{ fighter.health }} / {{ fighter.maxHealth }}
+  </div>
+</div>
+
+<core-attribute
+  [attribute]="fighter.agility"
+  name="Agility"
+  [showCost]="showCosts"
+></core-attribute>
+<core-attribute
+  [attribute]="fighter.constitution"
+  name="Constitution"
+  [showCost]="showCosts"
+></core-attribute>
+<core-attribute
+  [attribute]="fighter.dexterity"
+  name="Dexterity"
+  [showCost]="showCosts"
+></core-attribute>
+<core-attribute
+  [attribute]="fighter.strength"
+  name="Strength"
+  [showCost]="showCosts"
+></core-attribute>
+
+<div class="experience" *ngIf="showExperience">
+  <label>Experience</label>
+  <div [style.background]="experienceBar">
+    {{ fighter.usedExperience }} / {{ fighter.totalExperience }}
+  </div>
+</div>

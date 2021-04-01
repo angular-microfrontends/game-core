@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "pnpm",
+    "defaultCollection": "@angular-eslint/schematics"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "game-core": {
+      "projectType": "library",
+      "root": "projects/game-core",
+      "sourceRoot": "projects/game-core/src",
+      "prefix": "core",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/game-core/tsconfig.lib.json",
+            "project": "projects/game-core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/game-core/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {}
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/game-core/**/*.ts",
+              "projects/game-core/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "game-core"
+}
