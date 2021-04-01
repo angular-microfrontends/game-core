@@ -71,7 +71,7 @@ jobs:
           command: echo $GOOGLE_APPLICATION_CREDENTIALS_JSON > google-application-credentials.json
       - run:
           name: Google authentication
-          command: |-
+          command: >-
             gcloud auth activate-service-account
             --key-file google-application-credentials.json
       - run:
