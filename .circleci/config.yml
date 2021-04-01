@@ -17,35 +17,28 @@ jobs:
   build:
     docker:
       - image: znck/pnpm:latest
-    parameters:
-      project:
-        type: string
-        default: core
-      full-name:
-        type: string
-        default: angular-mf-core
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
       - run:
-          name: Build << parameters.project >>
+          name: Build
           command: >
-            pnpm run build << parameters.project >>
+            pnpm run build
             --
             --prod
             --deploy-url https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/
       - run:
-          name: List << parameters.project >>
-          command: ls dist/<< parameters.full-name >>
+          name: List
+          command: ls dist/angular-mf-game-core
       - save_cache:
-          key: build-output-<< parameters.project>>-{{ .Environment.CIRCLE_SHA1 }}
+          key: build-output-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - dist/<< parameters.full-name >>
+            - dist/angular-mf-game-core
       - store_artifacts:
-          path: dist/<< parameters.full-name >>
-          destination: dist/<< parameters.full-name >>
-  test:
+          path: dist/angular-mf-game-core
+          destination: dist/angular-mf-game-core
+  quality:
     docker:
       - image: znck/pnpm:latest
     steps:
@@ -55,13 +48,6 @@ jobs:
       - run:
           name: Test
           command: pnpm test
-  lint:
-    docker:
-      - image: znck/pnpm:latest
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
       - run:
           name: Lint
           command: pnpm run lint
@@ -80,9 +66,6 @@ workflows:
           full-name: single-spa-angular
           requires:
             - setup
-      - test:
-          requires:
-            - setup
-      - lint:
+      - quality:
           requires:
             - setup
