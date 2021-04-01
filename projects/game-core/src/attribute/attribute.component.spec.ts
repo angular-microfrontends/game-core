@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Attribute } from '../attribute';
 import { AttributeComponent } from './attribute.component';
 
 describe('AttributeComponent', () => {
@@ -15,6 +16,8 @@ describe('AttributeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AttributeComponent);
     component = fixture.componentInstance;
+    component.attribute = new Attribute(0);
+    component.name = 'Strength';
     fixture.detectChanges();
   });
 

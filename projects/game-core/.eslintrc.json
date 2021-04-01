@@ -32,6 +32,15 @@
             "style": "kebab-case"
           }
         ],
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": [
+              "**/*.spec.ts",
+              "**/jest.setup.ts"
+            ]
+          }
+        ],
         // conflicts with Angular generate and TSLint default
         "import/prefer-default-export": "off"
       }
