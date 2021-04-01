@@ -23,11 +23,7 @@ jobs:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
       - run:
           name: Build
-          command: >
-            pnpm run build
-            --
-            --prod
-            --deploy-url=https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/
+          command: pnpm run build -- --prod
       - run:
           name: List
           command: ls dist/angular-mf-game-core
@@ -57,7 +53,6 @@ workflows:
     jobs:
       - setup
       - build:
-          context: deploy-context
           requires:
             - setup
       - quality:
