@@ -77,7 +77,5 @@ workflows:
             - build
             - quality
           filters:
-            tags:
-              only: /^v.*/
             branches:
-              ignore: /.*/
+              only: master
