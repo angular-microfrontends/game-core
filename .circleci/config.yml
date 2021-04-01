@@ -57,13 +57,6 @@ workflows:
     jobs:
       - setup
       - build:
-          project: core
-          full-name: angular-mf-core
-          requires:
-            - setup
-      - build:
-          project: single-spa-angular
-          full-name: single-spa-angular
           requires:
             - setup
       - quality:
