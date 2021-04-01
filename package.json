@@ -6,7 +6,9 @@
     "start": "http-server --cors --gzip --port 9002 dist",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "version": "node scripts/version.js",
+    "postversion": "node scripts/postversion.js"
   },
   "private": false,
   "dependencies": {
