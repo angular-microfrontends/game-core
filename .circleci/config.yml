@@ -58,7 +58,7 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/angular-mf-game-core/.npmrc
       - run:
           name: Publish
-          command: pnpm publish
+          command: pnpm publish --access=public
           working_directory: dist/angular-mf-game-core
 workflows:
   version: 2
