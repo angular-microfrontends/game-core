@@ -26,13 +26,13 @@ jobs:
           command: pnpm run build -- --prod
       - run:
           name: List
-          command: ls dist/angular-microfrontends-game-core
+          command: ls dist
       - save_cache:
           key: build-output-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - dist/angular-microfrontends-game-core
+            - dist
       - store_artifacts:
-          path: dist/angular-microfrontends-game-core
+          path: dist
           destination: dist/
   quality:
     docker:
@@ -55,11 +55,53 @@ jobs:
           key: build-output-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Registry authentication
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/angular-microfrontends-game-core/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/.npmrc
       - run:
           name: Publish
           command: pnpm publish --access=public
-          working_directory: dist/angular-microfrontends-game-core
+          working_directory: dist
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - restore_cache:
+          key: build-output-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Credential file
+          command: echo $GOOGLE_APPLICATION_CREDENTIALS_JSON > google-application-credentials.json
+      - run:
+          name: Google authentication
+          command: |-
+            gcloud auth activate-service-account
+            --key-file google-application-credentials.json
+      - run:
+          name: Module upload
+          command: >
+            echo "The Cloud Storage directory will be $CIRCLE_PROJECT_REPONAME/$CIRCLE_SHA1"
+
+            gsutil cp -rZ
+            dist/bundles
+            gs://$BUCKET_NAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_SHA1
+      - run:
+          name: Import map update
+          command: >
+            export IMPORT_MAP_DATA='{
+            "service": "@angular-microfrontends/'"$CIRCLE_PROJECT_REPONAME"'",
+            "url": "https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/main.js"
+            }'
+
+            echo "Import map data: $IMPORT_MAP_DATA"
+
+            curl
+            --data "$IMPORT_MAP_DATA"
+            --fail
+            --header "Accept:application/json"
+            --header "Content-Type:application/json"
+            --include
+            --insecure
+            --request PATCH
+            --user $DEPLOYER_USERNAME:$DEPLOYER_PASSWORD
+            http://$DEPLOYER_HOST/services\?env=$DEPLOYER_ENV
 workflows:
   version: 2
   build_and_deploy:
@@ -73,6 +115,14 @@ workflows:
             - setup
       - publish:
           context: publish-context
+          requires:
+            - build
+            - quality
+          filters:
+            branches:
+              only: master
+      - deploy:
+          context: deploy-context
           requires:
             - build
             - quality
