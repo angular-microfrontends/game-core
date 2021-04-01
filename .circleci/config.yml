@@ -27,7 +27,7 @@ jobs:
             pnpm run build
             --
             --prod
-            --deploy-url https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/
+            --deploy-url=https://'"$CF_PUBLIC_URL"'/'"$CIRCLE_PROJECT_REPONAME"'/'"$CIRCLE_SHA1"'/
       - run:
           name: List
           command: ls dist/angular-mf-game-core
@@ -57,6 +57,7 @@ workflows:
     jobs:
       - setup
       - build:
+          context: deploy-context
           requires:
             - setup
       - quality:
