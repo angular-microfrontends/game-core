@@ -33,7 +33,7 @@ jobs:
             - dist/angular-mf-game-core
       - store_artifacts:
           path: dist/angular-mf-game-core
-          destination: dist/angular-mf-game-core
+          destination: dist/
   quality:
     docker:
       - image: znck/pnpm:latest
@@ -47,6 +47,19 @@ jobs:
       - run:
           name: Lint
           command: pnpm run lint
+  publish:
+    docker:
+      - image: znck/pnpm:latest
+    steps:
+      - restore_cache:
+          key: build-output-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Registry authentication
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/angular-mf-game-core/.npmrc
+      - run:
+          name: Publish
+          command: pnpm publish
+          working_directory: dist/angular-mf-game-core
 workflows:
   version: 2
   build_and_deploy:
@@ -58,3 +71,13 @@ workflows:
       - quality:
           requires:
             - setup
+      - publish:
+          context: publish-context
+          requires:
+            - build
+            - quality
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
