@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/angular-mf-game-core",
+  "dest": "../../dist/angular-microfrontends-game-core",
   "lib": {
     "entryFile": "src/public-api.ts"
   }

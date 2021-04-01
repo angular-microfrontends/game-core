@@ -1,6 +1,7 @@
 {
-  "name": "@angular-mf/game-core",
+  "name": "@angular-microfrontends/game-core",
   "version": "0.1.1-0",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "http-server --cors --gzip --port 9002 dist",
