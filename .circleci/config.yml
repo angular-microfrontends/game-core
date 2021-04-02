@@ -14,8 +14,8 @@ jobs:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
           paths:
             - node_modules
-  # Angular does not allow publishing with Ivy
-  build-publish:
+  # Angular does not allow publishing with Ivy, only View Engine
+  build-ve:
     docker:
       - image: znck/pnpm:latest
     steps:
@@ -29,11 +29,11 @@ jobs:
           name: List
           command: ls dist
       - save_cache:
-          key: build-output-publish-{{ .Environment.CIRCLE_SHA1 }}
+          key: build-output-ve-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - dist
   # Runtime needs Ivy
-  build-runtime:
+  build-ivy:
     docker:
       - image: znck/pnpm:latest
     steps:
@@ -47,7 +47,7 @@ jobs:
           name: List
           command: ls dist
       - save_cache:
-          key: build-output-runtime-{{ .Environment.CIRCLE_SHA1 }}
+          key: build-output-ivy-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - dist
   quality:
@@ -68,7 +68,7 @@ jobs:
       - image: znck/pnpm:latest
     steps:
       - restore_cache:
-          key: build-output-publish-{{ .Environment.CIRCLE_SHA1 }}
+          key: build-output-ve-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Registry authentication
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > dist/.npmrc
@@ -83,7 +83,7 @@ jobs:
       PROJECT_DIR: /home/circleci/project
     steps:
       - restore_cache:
-          key: build-output-runtime-{{ .Environment.CIRCLE_SHA1 }}
+          key: build-output-ivy-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Credential file
           command: echo $GOOGLE_APPLICATION_CREDENTIALS_JSON > google-application-credentials.json
@@ -125,11 +125,11 @@ workflows:
   build_and_deploy:
     jobs:
       - setup
-      - build-publish:
+      - build-ve:
           requires:
             - setup
-      - build-runtime:
-          required:
+      - build-ivy:
+          requires:
             - setup
       - quality:
           requires:
@@ -137,7 +137,7 @@ workflows:
       - deploy:
           context: deploy-context
           requires:
-            - build-runtime
+            - build-ivy
             - quality
           filters:
             branches:
@@ -145,7 +145,7 @@ workflows:
       - publish:
           context: publish-context
           requires:
-            - build-publish
+            - build-ve
             - quality
           filters:
             branches:
