@@ -79,6 +79,10 @@ jobs:
           command: >
             echo "The Cloud Storage directory will be $CIRCLE_PROJECT_REPONAME/$CIRCLE_SHA1"
 
+            pwd
+
+            find .
+
             gsutil cp -rZ
             dist/bundles
             gs://$BUCKET_NAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_SHA1
@@ -113,19 +117,18 @@ workflows:
       - quality:
           requires:
             - setup
-      - publish:
-          context: publish-context
+      - deploy:
+          context: deploy-context
           requires:
             - build
             - quality
           filters:
             branches:
               only: master
-      - deploy:
-          context: deploy-context
+      - publish:
+          context: publish-context
           requires:
-            - build
-            - quality
+            - deploy
           filters:
             branches:
               only: master
