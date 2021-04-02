@@ -63,6 +63,8 @@ jobs:
   deploy:
     docker:
       - image: google/cloud-sdk
+    environment:
+      PROJECT_DIR: /home/circleci/project/
     steps:
       - restore_cache:
           key: build-output-{{ .Environment.CIRCLE_SHA1 }}
@@ -79,12 +81,8 @@ jobs:
           command: >
             echo "The Cloud Storage directory will be $CIRCLE_PROJECT_REPONAME/$CIRCLE_SHA1"
 
-            pwd
-
-            find .
-
             gsutil cp -rZ
-            dist/bundles
+            $PROJECT_DIR/dist/bundles
             gs://$BUCKET_NAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_SHA1
       - run:
           name: Import map update
