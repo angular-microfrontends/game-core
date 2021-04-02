@@ -23,7 +23,7 @@ jobs:
           key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
       - run:
           name: Build
-          command: pnpm run build -- --prod
+          command: pnpm run build
       - run:
           name: List
           command: ls dist
