@@ -126,7 +126,8 @@ workflows:
       - publish:
           context: publish-context
           requires:
-            - deploy
+            - build
+            - quality
           filters:
             branches:
               only: master
